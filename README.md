@@ -1,6 +1,6 @@
 # gophertype
 
-<img src="https://github.com/oskarilindroos/gophertype/blob/ffc4fbca34306bfb827aa8a838b6ee5d85a59f28/demo.gif" alt="Demo of gophertype in action" width="400"/>
+<img src="https://github.com/oskarilindroos/gophertype/blob/ffc4fbca34306bfb827aa8a838b6ee5d85a59f28/demo.gif" alt="Demo of gophertype in action" width="600"/>
 
 A fast, terminal-based typing test inspired by MonkeyType, built with Go, Bubble Tea, and Lipgloss.
 
