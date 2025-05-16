@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"gophertype/internal/style"
 	"gophertype/internal/words"
 	"os"
 	"strings"
@@ -21,48 +22,6 @@ const (
 )
 
 type tickMsg time.Time
-
-var (
-	containerStyle = lipgloss.NewStyle().
-			Padding(2).
-			BorderStyle(lipgloss.RoundedBorder()).
-			BorderForeground(lipgloss.AdaptiveColor{Light: "236", Dark: "248"}).
-			Bold(true)
-
-	cursorStyle = lipgloss.NewStyle().
-			Underline(true).
-			Foreground(lipgloss.AdaptiveColor{Light: "236", Dark: "248"})
-
-	placeholderStyle = lipgloss.NewStyle().
-				Faint(true).
-				Foreground(lipgloss.AdaptiveColor{Light: "236", Dark: "248"})
-
-	typedStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.AdaptiveColor{Light: "000", Dark: "fff"})
-
-	correctStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.AdaptiveColor{Light: "28", Dark: "34"}).
-			Bold(true)
-
-	incorrectStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.AdaptiveColor{Light: "88", Dark: "160"}).
-			Bold(true).
-			Strikethrough(true)
-
-	timerStyle = lipgloss.NewStyle().
-			Bold(true).
-			Italic(true).
-			Foreground(lipgloss.AdaptiveColor{Light: "236", Dark: "248"})
-
-	resultsTitleStyle = lipgloss.NewStyle().
-				Bold(true).
-				Underline(true).
-				Foreground(lipgloss.AdaptiveColor{Light: "236", Dark: "248"})
-
-	resultsValueStyle = lipgloss.NewStyle().
-				Bold(true).
-				Foreground(lipgloss.AdaptiveColor{Light: "000", Dark: "fff"})
-)
 
 type model struct {
 	windowWidth  int
@@ -232,20 +191,20 @@ func formatWordDisplay(targetWord, typedPart, currentChar, remainingPart string)
 	if len(typedPart) > 0 {
 		for j, char := range typedPart {
 			if j < len(targetWord) && string(char) == string(targetWord[j]) {
-				wordDisplay += typedStyle.Render(string(char))
+				wordDisplay += style.TypedStyle.Render(string(char))
 			} else {
-				wordDisplay += incorrectStyle.Render(string(char))
+				wordDisplay += style.IncorrectStyle.Render(string(char))
 			}
 		}
 	}
 
 	// Add the current character with cursor
 	if len(currentChar) > 0 {
-		wordDisplay += cursorStyle.Render(currentChar)
+		wordDisplay += style.CursorStyle.Render(currentChar)
 	}
 
 	// Add the remaining part
-	wordDisplay += placeholderStyle.Render(remainingPart)
+	wordDisplay += style.PlaceholderStyle.Render(remainingPart)
 	return wordDisplay
 }
 
@@ -266,14 +225,14 @@ func (m model) View() string {
 				"Accuracy\n%s\n\n"+
 				"Correct\n%s\n\n"+
 				"Errors\n%s",
-			resultsTitleStyle.Render("Results"),
-			resultsValueStyle.Render(fmt.Sprintf("%d", netWPM)),
-			resultsValueStyle.Render(fmt.Sprintf("%d", grossWPM)),
-			resultsValueStyle.Render(fmt.Sprintf("%.1f%%", accuracy)),
-			resultsValueStyle.Render(fmt.Sprintf("%d", m.correct)),
-			resultsValueStyle.Render(fmt.Sprintf("%d", m.errors)))
+			style.ResultsTitleStyle.Render("Results"),
+			style.ResultsValueStyle.Render(fmt.Sprintf("%d", netWPM)),
+			style.ResultsValueStyle.Render(fmt.Sprintf("%d", grossWPM)),
+			style.ResultsValueStyle.Render(fmt.Sprintf("%.1f%%", accuracy)),
+			style.ResultsValueStyle.Render(fmt.Sprintf("%d", m.correct)),
+			style.ResultsValueStyle.Render(fmt.Sprintf("%d", m.errors)))
 
-		output += containerStyle.
+		output += style.ContainerStyle.
 			Width(int(float64(m.windowWidth) * 0.5)).
 			Align(lipgloss.Center).
 			Render(stats)
@@ -285,9 +244,9 @@ func (m model) View() string {
 				// Past words
 				typedWord := strings.Fields(m.userInput)[i]
 				if typedWord == targetWord {
-					displayWords = append(displayWords, correctStyle.Render(targetWord))
+					displayWords = append(displayWords, style.CorrectStyle.Render(targetWord))
 				} else {
-					displayWords = append(displayWords, incorrectStyle.Render(targetWord))
+					displayWords = append(displayWords, style.IncorrectStyle.Render(targetWord))
 				}
 			} else if i == m.currentWord {
 				// Current word
@@ -305,16 +264,16 @@ func (m model) View() string {
 				displayWords = append(displayWords, wordDisplay)
 			} else {
 				// Future words
-				displayWords = append(displayWords, placeholderStyle.Render(targetWord))
+				displayWords = append(displayWords, style.PlaceholderStyle.Render(targetWord))
 			}
 		}
 
 		// Create the typing area with timer
 		typingArea := strings.Join(displayWords, " ")
-		timer := timerStyle.Render(fmt.Sprintf("%d", m.timeLeft))
+		timer := style.TimerStyle.Render(fmt.Sprintf("%d", m.timeLeft))
 		typingArea = timer + "\n" + typingArea
 
-		output += containerStyle.
+		output += style.ContainerStyle.
 			Width(int(float64(m.windowWidth) * 0.5)).
 			Render(typingArea)
 	}
