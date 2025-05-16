@@ -163,9 +163,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func calculateWPM(userInput string, timeElapsed time.Duration, errors int) (grossWPM int, netWPM int) {
-	const charsPerWord = 5.0
-	const minTimeElapsed = 0.01 // in minutes
-
 	minutes := timeElapsed.Minutes()
 	if minutes == 0 {
 		minutes = minTimeElapsed
