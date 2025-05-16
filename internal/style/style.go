@@ -37,7 +37,7 @@ var (
 	ResultsTitleStyle = lipgloss.NewStyle().
 				Bold(true).
 				Underline(true).
-				Foreground(lipgloss.AdaptiveColor{Light: "236", Dark: "248"})
+				Foreground(lipgloss.AdaptiveColor{Light: "000", Dark: "fff"})
 
 	ResultsValueStyle = lipgloss.NewStyle().
 				Bold(true).
